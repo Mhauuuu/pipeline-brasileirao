@@ -1,0 +1,36 @@
+name: Robo do Brasileirao
+
+on:
+  schedule:
+    
+    - cron: '0 9 * * *'
+  workflow_dispatch: 
+
+jobs:
+  atualiza-dados:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Puxar o codigo
+        uses: actions/checkout@v3
+
+      - name: Configurar Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Instalar bibliotecas
+        run: pip install requests pandas python-dotenv
+
+      - name: Executar o ETL (com a Chave Secreta)
+        env:
+          
+          API_KEY_FUTEBOL: ${{ secrets.API_KEY_FUTEBOL }}
+        run: python teste_futebol.py
+
+      - name: Salvar o Banco de Dados atualizado
+        run: |
+          git config --global user.name "Robo Esportivo"
+          git config --global user.email "robo@github.com"
+          git add banco_futebol.db
+          git commit -m "bot: atualiza tabela do Brasileirao" || echo "Nenhuma mudanca hoje"
+          git push

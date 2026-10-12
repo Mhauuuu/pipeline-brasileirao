@@ -24,6 +24,7 @@ try:
     for linha in tabela_suja:
         linhas_limpas.append({
             "Posicao": linha['rank'],
+            "Escudo": linha['team']['logo'],
             "Time": linha['team']['name'],
             "Pontos": linha['points'],
             "Saldo_Gols": linha['goalsDiff']
